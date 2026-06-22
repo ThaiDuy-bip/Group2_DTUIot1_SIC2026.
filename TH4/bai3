@@ -1,0 +1,24 @@
+import speech_recognition as sr
+
+# Khởi tạo bộ nhận dạng
+recognizer = sr.Recognizer()
+
+# Sử dụng microphone làm nguồn âm thanh
+with sr.Microphone() as source:
+    print("Hãy nói gì đó...")
+    audio_data = recognizer.listen(source)
+    print("Đang xử lý...")
+
+    try:
+        # Nhận dạng giọng nói bằng Google Speech Recognition
+        text = recognizer.recognize_google(audio_data, language="vi-VN")
+        print("Bạn vừa nói:", text)
+
+        # Ghi kết quả vào file log.txt
+        with open("speech_log.txt", "a") as f:
+            f.write(text + "\n")
+
+    except sr.UnknownValueError:
+        print("Không nhận dạng được âm thanh.")
+    except sr.RequestError:
+        print("Lỗi kết nối đến dịch vụ nhận dạng.")
