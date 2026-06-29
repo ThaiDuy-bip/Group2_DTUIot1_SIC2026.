@@ -6,7 +6,7 @@ from datetime import datetime
 
 # Thông tin Gmail
 EMAIL = "duy14022006l@gmail.com"
-APP_PASSWORD = "ihll lcwd rnkd uinu"
+APP_PASSWORD = "ihll lcwd rnkd uin"
 RECEIVER = "duy14022006l@gmail.com"
 
 
