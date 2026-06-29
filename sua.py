@@ -5,9 +5,9 @@ from email.message import EmailMessage
 from datetime import datetime
 
 # Thông tin Gmail
-EMAIL = "your_email@gmail.com"
-APP_PASSWORD = "your_app_password"
-RECEIVER = "receiver@gmail.com"
+EMAIL = "duy14022006l@gmail.com"
+APP_PASSWORD = "ihll lcwd rnkd uinu"
+RECEIVER = "duy14022006l@gmail.com"
 
 
 def lay_ip():
