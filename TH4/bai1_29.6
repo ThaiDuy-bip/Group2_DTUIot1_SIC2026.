@@ -1,0 +1,33 @@
+import smtplib
+from email.mime.text import MIMEText
+import subprocess
+
+# Lấy địa chỉ IP
+try:
+    ip = subprocess.check_output(
+        ["hostname", "-I"], text=True
+    ).strip().split()[0]
+except Exception:
+    ip = "Không lấy được địa chỉ IP"
+
+# Thông tin email
+sender = "nguyenkimhongg07@gmail.com"
+password = "YOUR_APP_PASSWORD"      # App Password của Gmail
+receiver = "nguyenkimhongg07@gmail.com"
+
+# Tạo nội dung email
+msg = MIMEText(f"Current Raspberry Pi IP: {ip}")
+msg["Subject"] = "Raspberry Pi Booted"
+msg["From"] = sender
+msg["To"] = receiver
+
+# Gửi email
+try:
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(sender, password)
+        server.sendmail(sender, receiver, msg.as_string())
+
+    print("Email sent successfully!")
+except Exception as e:
+    print("Failed to send email:", e)
