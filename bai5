@@ -1,41 +1,70 @@
+import smtplib
 import socket
 import subprocess
-import yagmail
+from email.message import EmailMessage
 from datetime import datetime
 
-EMAIL = "gmailcuaban@gmail.com"
-PASSWORD = "AppPassword"
+# Thông tin Gmail
+EMAIL = "your_email@gmail.com"
+APP_PASSWORD = "your_app_password"
+RECEIVER = "receiver@gmail.com"
 
-TO = "gmailnhan@gmail.com"
 
-def get_ip():
+def lay_ip():
     try:
-        ip = subprocess.check_output(
-            "hostname -I",
-            shell=True
-        ).decode().strip()
-        return ip
-    except:
-        return "Không lấy được IP"
+        result = subprocess.run(
+            ["hostname", "-I"],
+            capture_output=True,
+            text=True
+        )
 
-hostname = socket.gethostname()
-ip = get_ip()
+        ip_list = result.stdout.strip().split()
 
-subject = "Raspberry Pi IP"
+        if len(ip_list) == 0:
+            return "Khong tim thay IP"
 
-body = f"""
-Raspberry Pi vừa khởi động
+        return ip_list[0]
 
-Tên máy: {hostname}
+    except Exception:
+        return "Loi lay IP"
 
-IP:
-{ip}
 
-Thời gian:
-{datetime.now()}
+def gui_email():
+    ten_may = socket.gethostname()
+    dia_chi_ip = lay_ip()
+    thoi_gian = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    noi_dung = f"""
+Raspberry Pi da khoi dong thanh cong.
+
+Ten may: {ten_may}
+
+Dia chi IP: {dia_chi_ip}
+
+Thoi gian:
+{thoi_gian}
 """
 
-yag = yagmail.SMTP(EMAIL, PASSWORD)
-yag.send(TO, subject, body)
+    message = EmailMessage()
+    message["Subject"] = "Thong bao Raspberry Pi"
+    message["From"] = EMAIL
+    message["To"] = RECEIVER
+    message.set_content(noi_dung)
 
-print("Đã gửi Email.")
+    try:
+        smtp = smtplib.SMTP("smtp.gmail.com", 587)
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.login(EMAIL, APP_PASSWORD)
+        smtp.send_message(message)
+        smtp.quit()
+
+        print("Gui email thanh cong!")
+
+    except Exception as error:
+        print("Gui email that bai!")
+        print(error)
+
+
+if __name__ == "__main__":
+    gui_email()
